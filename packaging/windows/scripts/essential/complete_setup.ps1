@@ -161,7 +161,7 @@ sunshine_name = Solo Mode
    $apolloFleetExeErrorLog = Join-Path -Path $env:TEMP -ChildPath "apollofleet_exe_error.log"
    if (Test-Path $apolloFleetExePath) {
        try {
-           $process = Start-Process -FilePath $apolloFleetExePath -Wait -NoNewWindow -PassThru -RedirectStandardOutput $apolloFleetExeLog -RedirectStandardError $apolloFleetExeErrorLog
+           $process = Start-Process -FilePath $apolloFleetExePath -NoNewWindow -PassThru -RedirectStandardOutput $apolloFleetExeLog -RedirectStandardError $apolloFleetExeErrorLog
            if ($process.ExitCode -eq 0) {
                Write-Host "ApolloFleet.exe ran successfully."
            } else {
