@@ -69,7 +69,7 @@
           </div>
           <br />
           <p class="mb-0">{{ $t('pin.device_management_desc') }}</p>
-          <p class="mb-0">{{ $t('pin.device_management_warning') }} <a href="https://github.com/ClassicOldSong/Apollo/wiki/Permission-System" target="_blank">{{ $t('_common.learn_more') }}</a></p>
+          <p class="mb-0">{{ $t('pin.device_management_warning') }} <a href="https://github.com/dcossia-proj/PC-Link-U/wiki/Permission-System" target="_blank">{{ $t('_common.learn_more') }}</a></p>
           <div id="apply-alert" class="alert alert-success d-flex align-items-center mt-3" :style="{ 'display': (showApplyMessage ? 'flex !important': 'none !important') }">
             <div class="me-2"><b>{{ $t('_common.success') }}</b> {{ $t('pin.unpair_single_success') }}</div>
             <button class="btn btn-success ms-auto apply" @click="clickedApplyBanner">{{ $t('_common.dismiss') }}</button>
@@ -134,7 +134,7 @@
                 placeholder="1920x1080x59.94"
                 @input="validateModeOverride"
               />
-              <div class="form-text">{{ $t('pin.display_mode_override_desc') }} <a href="https://github.com/ClassicOldSong/Apollo/wiki/Display-Mode-Override" target="_blank">{{ $t('_common.learn_more') }}</a></div>
+              <div class="form-text">{{ $t('pin.display_mode_override_desc') }} <a href="https://github.com/dcossia-proj/PC-Link-U/wiki/Display-Mode-Override" target="_blank">{{ $t('_common.learn_more') }}</a></div>
             </div>
 
             <!-- Allow client commands -->
@@ -149,7 +149,7 @@
             <!-- connect/disconnect commands -->
             <div class="mb-3 mt-2 d-flex flex-column" v-for="cmdType in ['do', 'undo']" v-if="client.editAllowClientCommands">
               <label class="mb-0 orm-label">{{ $t(`pin.client_${cmdType}_cmd`) }}</label>
-              <div class="form-text">{{ $t(`pin.client_${cmdType}_cmd_desc`) }} <a href="https://github.com/ClassicOldSong/Apollo/wiki/Client-Commands" target="_blank">{{ $t('_common.learn_more') }}</a></div>
+              <div class="form-text">{{ $t(`pin.client_${cmdType}_cmd_desc`) }} <a href="https://github.com/dcossia-proj/PC-Link-U/wiki/Client-Commands" target="_blank">{{ $t('_common.learn_more') }}</a></div>
               <table class="mt-2 table" v-if="client[`edit_${cmdType}`].length > 0">
                 <thead>
                   <tr>
