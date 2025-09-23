@@ -81,10 +81,10 @@ Solo Mode disables all other displays and streams exclusively to the client devi
 
 All three instances of PC-Link-U (Asymmetrical, Solo, and Mirror) can be customized to suit user-specific requirements using the ApolloFleet Manager. After running the post-installation script (`complete_setup.ps1`), the ApolloFleet Manager opens automatically. To configure settings for each instance:
 
-1. Open the ApolloFleet Manager from the system tray or by running `%USERPROFILE%\Documents\ApolloFleet\ApolloFleet.exe`.
-2. In the ApolloFleet Manager interface, locate the Web UI link for each instance (e.g., `https://localhost:47990/config.html` for the default instance, with different ports for each instance as specified in `fleet-1.conf`, `fleet-2.conf`, and `fleet-3.conf`).
+1. Open the ApolloFleet Manager from the system tray
+2. In the ApolloFleet Manager interface, locate the Web UI link for each instance (Each can be found by clicking the specific instance in ApolloFleet).
 3. Click the Web UI link for the desired instance to access its configuration page in your web browser.
-4. Adjust settings such as network settings, input permissions, or application configurations as needed. Refer to the **Apollo README** below for detailed configuration options. This process allows users to tailor each instance’s settings to their specific gaming needs, ensuring optimal performance and compatibility. Most settings are either preconfigured or client sided, but a few changes (like upnp, encoder settings, etc.) may be necessary.
+4. Adjust settings such as network settings, input permissions, or application configurations as needed. Refer to the **Apollo README** below for detailed configuration options. This process allows users to tailor each instance’s settings to their specific gaming needs, ensuring optimal performance and compatibility. Most settings are either preconfigured or client sided, but a few changes (like upnp, encoder settings, etc.) may be necessary. Remember that each instance has its own settings, so you may have to change certain settings in all of them to get desired results.
 
 ## Thanks
 
