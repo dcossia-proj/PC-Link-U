@@ -8,7 +8,7 @@ PC-Link-U is a self-hosted game streaming solution built on top of Apollo, desig
 
 - **Three Preconfigured Instances**: Asymmetrical Mode, Solo Mode, and Mirror Mode, each optimized for different use cases.
 - **Seamless Integration**: Works with ApolloFleet to manage streaming instances efficiently.
-- **Tip**: Keep the ApolloFleet icon in the system tray and hide the three instances. Closing an instance while ApolloFleet is running will cause it to automatically reopen, ensuring continuous operation.
+- **Tip**: Keep the ApolloFleet icon in the system tray and hide the three instances. Closing an instance while ApolloFleet is running will cause it to automatically reopen, causing a loop. You can easily manage all three instances from ApolloFleet anyways.
 
 ## Prerequisites
 
