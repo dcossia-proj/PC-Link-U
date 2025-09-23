@@ -38,7 +38,6 @@ Follow these steps to install and set up PC-Link-U:
    - Accept the administrative privileges prompt when prompted.
 4. **Configure ApolloFleet**:
    - When the 7zip self-extractor (`apollofleet.exe`) opens, select the Documents folder (`%USERPROFILE%\Documents`) as the extraction destination.
-     
 ![Step4-1](assets/step4-1.png "Step 4-1")
 ![Step4-2](assets/step4-2.png "Step 4-2")
 ![Step4-4](assets/step4-4.png "Step 4-4")
