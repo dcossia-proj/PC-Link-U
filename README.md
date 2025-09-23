@@ -37,11 +37,15 @@ Follow these steps to install and set up PC-Link-U:
    - Accept the administrative privileges prompt when prompted.
 4. **Configure ApolloFleet**:
    - When the 7zip self-extractor (`apollofleet.exe`) opens, select the Documents folder (`%USERPROFILE%\Documents`) as the extraction destination.
+![Step4-1](assets/step4-1.png "Step 4-1")
+![Step4-2](assets/step4-2.png "Step 4-2")
+![Step4-3](assets/step4-3.png "Step 4-3")
+![Step4-4](assets/step4-4.png "Step 4-4")
 5. **Complete Setup**:
    - Wait for the script to finish. It will generate configuration files (`settings.ini`, `fleet-1.conf`, `fleet-2.conf`, `fleet-3.conf`) in `%USERPROFILE%\Documents\ApolloFleet\config`.
    - Once the script completes, PC-Link-U is installed and ready to use.
    - **Tip**: If changing from Apollo/Sunshine, and you want to keep any applications you have made previously, make 3 copies of the apps.json file in your Sunshine/Apollo config folder, close ApolloFleet AND all 3 instances of PC-Link-U, rename the 3 copies of apps.json to apps-1.json, apps-2.json, and apps-3.json, and move them into the %USERPROFILE%\\Documents\\ApolloFleet\\config folder (overwrite if necessary), and relaunch ApolloFleet from %USERPROFILE%\\Documents\\ApolloFleet. You can uninstall Apollo/Sunshine afterwards.
-
+   - 
 ## Modes
 
 PC-Link-U supports three distinct streaming modes, each tailored for specific gaming scenarios. Below are the details for each mode.
@@ -49,14 +53,17 @@ PC-Link-U supports three distinct streaming modes, each tailored for specific ga
 ### Asymmetrical Mode
 
 Asymmetrical Mode adds the client device as a separate monitor while keeping the PC’s primary display intact. This mode is ideal for scenarios requiring dual-screen setups, such as Wii U or Nintendo DS/3DS emulation, where the PC screen displays the main game and the client device acts as a secondary screen (e.g., the Wii U GamePad or DS bottom screen). Also could be used just to make a client act as a dedicated monitor. Good example can be seen here: https://www.reddit.com/r/SteamDeck/comments/1kscuvz/my_steam_deck_can_now_be_used_as_basically_a/
+![AsymmetryDemo](assets/asymmetrical.png "Asymmetrical")
 
 #### OBS
 
 Using OBS Studio is key to maximizing Asymmetrical Mode’s potential. OBS allows you to create scenes by capturing various program windows, game elements, or other sources and projecting them in fullscreen to the client device. This creates a Wii U GamePad-like UI on the client, while the main game runs on the PC’s primary screen. For example:
 
 - Capture specific game UI elements (e.g., maps, menus) on the client screen.
+![OBS3](assets/obs3.png "OBS UI")
 - Combine multiple sources (windows, game captures) into a custom scene for a tailored experience per game, using different OBS scenes as different profiles. Adding obs64.exe to each application in PC Link U as a detached command with the launch parameter --scene "GAME" while also using stop process as an undo command, and setting OBS to remember projectors on startup will allow the specific game scene to appear on the client screen while the main game launches. 
-
+![OBS1](assets/obs.png "OBS Scenes")
+![OBS2](assets/obs2.png "OBS Projector")
 #### Native
 
 Asymmetrical Mode also supports native applications that utilize secondary displays. Examples include:
@@ -71,6 +78,7 @@ Asymmetrical Mode also supports native applications that utilize secondary displ
 Mirror Mode captures the PC’s primary display and streams it to the client device. This mode requires an initial display device ID entry in the **Audio/Video** section of the configuration tab in the web UI (`https://localhost:11001/config.html` by default for Mirror Mode). It’s ideal for couch party games where one player uses a handheld or phone to view the game, while others watch on a shared TV or monitor. Examples include:
 
 - **Mario Party**, **Rounds**, **Gang Beasts**, **Stick Fight**: One player plays and sees the game via the client device, while the rest of the group views the game on the main display. This mode ensures a seamless, low-latency experience for local multiplayer gaming.
+![MirrorDemo](assets/mirror.png "Mirror Mode")
 
 ### Solo Mode
 
@@ -78,6 +86,7 @@ Solo Mode disables all other displays and streams exclusively to the client devi
 
 - **Remote Play at Home**: Play games from a handheld or phone while away from the PC (e.g., in another room).
 - **Remote Play Away from Home**: Access your gaming PC from anywhere with an internet connection. Solo Mode ensures the client device is the sole display, optimizing performance for remote gaming scenarios.
+![SoloDemo](assets/solo.png "Solo")
 
 ## Changing Settings
 
@@ -86,6 +95,7 @@ All three instances of PC-Link-U (Asymmetrical, Solo, and Mirror) can be customi
 1. Open the ApolloFleet Manager from the system tray
 2. In the ApolloFleet Manager interface, locate the Web UI link for each instance (Each can be found by clicking the specific instance in ApolloFleet).
 3. Click the Web UI link for the desired instance to access its configuration page in your web browser.
+![Step5](assets/step5.png "Step 5")  
 4. Adjust settings such as network settings, input permissions, or application configurations as needed. Refer to the **Apollo README** below for detailed configuration options. This process allows users to tailor each instance’s settings to their specific gaming needs, ensuring optimal performance and compatibility. Most settings are either preconfigured or client sided, but a few changes (like upnp, encoder settings, etc.) may be necessary. Remember that each instance has its own settings, so you may have to change certain settings in all of them to get desired results.
 
 ## Thanks
