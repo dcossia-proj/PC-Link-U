@@ -60,7 +60,7 @@ Using OBS Studio is key to maximizing Asymmetrical Mode’s potential. OBS allow
 
 - Capture specific game UI elements (e.g., maps, menus) on the client screen.
 ![OBS3](assets/obs3.png "OBS UI")
-- Combine multiple sources (windows, game captures) into a custom scene for a tailored experience per game, using different OBS scenes as different profiles. Adding obs64.exe to each application in PC Link U as a detached command with the launch parameter --scene "GAME" while also using stop process as an undo command, and setting OBS to remember projectors on startup will allow the specific game scene to appear on the client screen while the main game launches. 
+- Combine multiple sources (windows, game captures) into a custom scene for a tailored experience per game, using different OBS scenes as different profiles. Adding obs64.exe to each application in PC Link U as a detached command with the launch parameter --scene "GAME" while also using stop process as an undo command, and setting OBS to remember projectors on startup will allow the specific game scene to appear on the client screen while the main game launches through PC Link U. 
 ![OBS1](assets/obs.png "OBS Scenes")
 ![OBS2](assets/obs2.png "OBS Projector")
 #### Native
