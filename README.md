@@ -39,7 +39,7 @@ Follow these steps to install and set up PC-Link-U:
 5. **Complete Setup**:
    - Wait for the script to finish. It will generate configuration files (`settings.ini`, `fleet-1.conf`, `fleet-2.conf`, `fleet-3.conf`) in `%USERPROFILE%\Documents\ApolloFleet\config`.
    - Once the script completes, PC-Link-U is installed and ready to use.
-   - **Tip**: If changing from Apollo/Sunshine, and you want to keep any applications you have made previously, make 3 copies of the apps.json file in your Sunshine/Apollo config folder, close ApolloFleet AND all 3 instances of PC-Link-U, rename the 3 copies of apps.json to apps-1.json, apps-2.json, and apps-3.json (overwrite if necessary), and move them into the %USERPROFILE%\\Documents\\ApolloFleet\\config folder, and relaunch ApolloFleet from %USERPROFILE%\\Documents\\ApolloFleet. You can uninstall Apollo/Sunshine afterwards.
+   - **Tip**: If changing from Apollo/Sunshine, and you want to keep any applications you have made previously, make 3 copies of the apps.json file in your Sunshine/Apollo config folder, close ApolloFleet AND all 3 instances of PC-Link-U, rename the 3 copies of apps.json to apps-1.json, apps-2.json, and apps-3.json, and move them into the %USERPROFILE%\\Documents\\ApolloFleet\\config folder (overwrite if necessary), and relaunch ApolloFleet from %USERPROFILE%\\Documents\\ApolloFleet. You can uninstall Apollo/Sunshine afterwards.
 
 ## Modes
 
