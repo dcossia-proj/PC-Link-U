@@ -7,32 +7,6 @@
        exit $LASTEXITCODE
    }
 
-   Write-Host "Checking for OBS Studio installation..."
-   $obsExePath = "C:\Program Files\obs-studio\bin\64bit\obs64.exe"
-   $obsLog = Join-Path -Path $env:TEMP -ChildPath "obs_install.log"
-   $obsErrorLog = Join-Path -Path $env:TEMP -ChildPath "obs_install_error.log"
-   if (Test-Path $obsExePath) {
-       Write-Host "OBS Studio is already installed at $obsExePath. Skipping installation."
-       Add-Content -Path $obsLog -Value "OBS Studio is already installed at $obsExePath. Skipped installation." -ErrorAction SilentlyContinue
-   }
-   else {
-       Write-Host "Installing OBS Studio silently..."
-       try {
-           $obsInstaller = Join-Path -Path $PSScriptRoot -ChildPath "..\..\extra\OBS-Studio-Installer.exe"
-           $process = Start-Process -FilePath $obsInstaller -ArgumentList "/S","/D=`"$env:ProgramFiles\obs-studio`"" -Wait -NoNewWindow -PassThru -RedirectStandardOutput $obsLog -RedirectStandardError $obsErrorLog
-           if ($process.ExitCode -eq 0) {
-               Write-Host "OBS Studio installed successfully."
-           } else {
-               Write-Host "OBS Studio installation failed. Exit code: $($process.ExitCode)"
-               Write-Host "See $obsLog and $obsErrorLog for details."
-           }
-       }
-       catch {
-           Write-Host "OBS Studio installation failed. Error: $_"
-           Write-Host "See $obsLog and $obsErrorLog for details."
-       }
-   }
-
    Write-Host "Running apollofleet.exe (7z self-extractor)..."
    try {
        $apolloFleetExe = Join-Path -Path $PSScriptRoot -ChildPath "..\..\extra\apollofleet.exe"
