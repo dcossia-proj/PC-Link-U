@@ -58,7 +58,7 @@ CamDeviceID=Unset
 MicEnable=0
 CamEnable=0
 [Instance1]
-Name=Asymetrical Mode
+Name=Asymmetrical Mode
 Port=11000
 Enabled=1
 AudioDevice=Unset
