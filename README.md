@@ -74,7 +74,7 @@ Asymmetrical Mode also supports native applications that utilize secondary displ
 
 ### Mirror Mode
 
-Mirror Mode captures the PC’s primary display and streams it to the client device. This mode requires an initial display device ID entry in the **Audio/Video** section of the configuration tab in the web UI (`https://localhost:11001/config.html` by default for Mirror Mode). It’s ideal for couch party games where one player uses a handheld or phone to view the game, while others watch on a shared TV or monitor. Examples include:
+Mirror Mode captures the PC’s primary display and streams it to the client device. This mode requires an initial display device ID entry in the **Audio/Video** section of the configuration tab in the web UI (`https://localhost:12001/config.html` by default for Mirror Mode). It’s ideal for couch party games where one player uses a handheld or phone to view the game, while others watch on a shared TV or monitor. Examples include:
 
 - **Mario Party**, **Rounds**, **Gang Beasts**, **Stick Fight**: One player plays and sees the game via the client device, while the rest of the group views the game on the main display. This mode ensures a seamless, low-latency experience for local multiplayer gaming.
 ![MirrorDemo](assets/mirror.png "Mirror Mode")
