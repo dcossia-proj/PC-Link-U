@@ -7,22 +7,30 @@
        exit $LASTEXITCODE
    }
 
-   Write-Host "Installing OBS Studio silently..."
-   try {
-       $obsInstaller = Join-Path -Path $PSScriptRoot -ChildPath "..\..\extra\OBS-Studio-Installer.exe"
-       $obsLog = Join-Path -Path $env:TEMP -ChildPath "obs_install.log"
-       $obsErrorLog = Join-Path -Path $env:TEMP -ChildPath "obs_install_error.log"
-       $process = Start-Process -FilePath $obsInstaller -ArgumentList "/S","/D=`"$env:ProgramFiles\obs-studio`"" -Wait -NoNewWindow -PassThru -RedirectStandardOutput $obsLog -RedirectStandardError $obsErrorLog
-       if ($process.ExitCode -eq 0) {
-           Write-Host "OBS Studio installed successfully."
-       } else {
-           Write-Host "OBS Studio installation failed (possibly already installed). Exit code: $($process.ExitCode)"
+   Write-Host "Checking for OBS Studio installation..."
+   $obsExePath = "C:\Program Files\obs-studio\bin\64bit\obs64.exe"
+   $obsLog = Join-Path -Path $env:TEMP -ChildPath "obs_install.log"
+   $obsErrorLog = Join-Path -Path $env:TEMP -ChildPath "obs_install_error.log"
+   if (Test-Path $obsExePath) {
+       Write-Host "OBS Studio is already installed at $obsExePath. Skipping installation."
+       Add-Content -Path $obsLog -Value "OBS Studio is already installed at $obsExePath. Skipped installation." -ErrorAction SilentlyContinue
+   }
+   else {
+       Write-Host "Installing OBS Studio silently..."
+       try {
+           $obsInstaller = Join-Path -Path $PSScriptRoot -ChildPath "..\..\extra\OBS-Studio-Installer.exe"
+           $process = Start-Process -FilePath $obsInstaller -ArgumentList "/S","/D=`"$env:ProgramFiles\obs-studio`"" -Wait -NoNewWindow -PassThru -RedirectStandardOutput $obsLog -RedirectStandardError $obsErrorLog
+           if ($process.ExitCode -eq 0) {
+               Write-Host "OBS Studio installed successfully."
+           } else {
+               Write-Host "OBS Studio installation failed. Exit code: $($process.ExitCode)"
+               Write-Host "See $obsLog and $obsErrorLog for details."
+           }
+       }
+       catch {
+           Write-Host "OBS Studio installation failed. Error: $_"
            Write-Host "See $obsLog and $obsErrorLog for details."
        }
-   }
-   catch {
-       Write-Host "OBS Studio installation failed. Error: $_"
-       Write-Host "See $obsLog and $obsErrorLog for details."
    }
 
    Write-Host "Running apollofleet.exe (7z self-extractor)..."
@@ -80,7 +88,7 @@ Name=Asymetrical Mode
 Port=11000
 Enabled=1
 AudioDevice=Unset
-HeadlessModeSet=disabled
+HeadlessModeSet=enabled
 [Instance2]
 Name=Mirror Mode
 Port=12000
@@ -161,22 +169,36 @@ sunshine_name = Solo Mode
    $apolloFleetExeErrorLog = Join-Path -Path $env:TEMP -ChildPath "apollofleet_exe_error.log"
    if (Test-Path $apolloFleetExePath) {
        try {
-           $process = Start-Process -FilePath $apolloFleetExePath -Wait -NoNewWindow -PassThru -RedirectStandardOutput $apolloFleetExeLog -RedirectStandardError $apolloFleetExeErrorLog
-           if ($process.ExitCode -eq 0) {
-               Write-Host "ApolloFleet.exe ran successfully."
-           } else {
-               Write-Host "Failed to run ApolloFleet.exe. Exit code: $($process.ExitCode)"
-               Write-Host "See $apolloFleetExeLog and $apolloFleetExeErrorLog for details."
-           }
+           Start-Process -FilePath $apolloFleetExePath -NoNewWindow -RedirectStandardOutput $apolloFleetExeLog -RedirectStandardError $apolloFleetExeErrorLog
+           Write-Host "ApolloFleet.exe launched successfully."
        }
        catch {
-           Write-Host "Failed to run ApolloFleet.exe. Error: $_"
+           Write-Host "Failed to launch ApolloFleet.exe. Error: $_"
            Write-Host "See $apolloFleetExeLog and $apolloFleetExeErrorLog for details."
+       }
+       Write-Host "Press any key to continue or wait 10 seconds to exit..."
+       $timeout = 10
+       $startTime = Get-Date
+       while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
+           if ([Console]::KeyAvailable) {
+               $null = [Console]::ReadKey($true)
+               break
+           }
+           Start-Sleep -Milliseconds 100
        }
    }
    else {
        Write-Host "Error: ApolloFleet.exe not found at $apolloFleetExePath"
+       Write-Host "Press any key to continue or wait 10 seconds to exit..."
+       $timeout = 10
+       $startTime = Get-Date
+       while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
+           if ([Console]::KeyAvailable) {
+               $null = [Console]::ReadKey($true)
+               break
+           }
+           Start-Sleep -Milliseconds 100
+       }
    }
 
    Write-Host "PC-Link-U setup complete!"
-   Pause
