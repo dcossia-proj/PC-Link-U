@@ -92,7 +92,7 @@ Solo Mode disables all other displays and streams exclusively to the client devi
 - **Remote Play at Home**: Play games from a handheld or phone while away from the PC (e.g., in another room).
 - **Remote Play Away from Home**: Access your gaming PC from anywhere with an internet connection. Solo Mode ensures the client device is the sole display, optimizing performance for remote gaming scenarios.
   
-![SoloDemo](assets/solo.png "Solo")
+![SoloDemo](assets/solo.jpg "Solo")
 
 ## Changing Settings
 
