@@ -33,6 +33,7 @@ Follow these steps to install and set up PC-Link-U:
      ```bash
      powershell -ExecutionPolicy Bypass -File "C:\Program Files\PC-Link-U\scripts\essential\complete_setup.ps1"
      ```
+![Step3](assets/step3.png "Step 3")
    - Accept the administrative privileges prompt when prompted.
 4. **Configure ApolloFleet**:
    - When the 7zip self-extractor (`apollofleet.exe`) opens, select the Documents folder (`%USERPROFILE%\Documents`) as the extraction destination.
@@ -47,7 +48,7 @@ PC-Link-U supports three distinct streaming modes, each tailored for specific ga
 
 ### Asymmetrical Mode
 
-Asymmetrical Mode adds the client device as a separate monitor while keeping the PC’s primary display intact. This mode is ideal for scenarios requiring dual-screen setups, such as Wii U or Nintendo DS/3DS emulation, where the PC screen displays the main game and the client device acts as a secondary screen (e.g., the Wii U GamePad or DS bottom screen). Also could be used just to make a client act as a dedicated monitor.
+Asymmetrical Mode adds the client device as a separate monitor while keeping the PC’s primary display intact. This mode is ideal for scenarios requiring dual-screen setups, such as Wii U or Nintendo DS/3DS emulation, where the PC screen displays the main game and the client device acts as a secondary screen (e.g., the Wii U GamePad or DS bottom screen). Also could be used just to make a client act as a dedicated monitor. Good example can be seen here: https://www.reddit.com/r/SteamDeck/comments/1kscuvz/my_steam_deck_can_now_be_used_as_basically_a/
 
 #### OBS
 
@@ -60,9 +61,10 @@ Using OBS Studio is key to maximizing Asymmetrical Mode’s potential. OBS allow
 
 Asymmetrical Mode also supports native applications that utilize secondary displays. Examples include:
 
-- **Microsoft Flight Simulator**: Drag a secondary window (e.g., cockpit instruments) to the client screen while the main game runs on the PC.
+- **Microsoft Flight Simulator**: Drag a secondary window (e.g., cockpit instruments) to the client screen while the main game runs on the PC screen.
 - **Wii U/3DS/DS Emulation**: Use the PC screen as the top screen and the client device as the bottom screen for touch or secondary display purposes.
-- **Tip**: Asymmetrical Mode includes the **input-only mode** (`enable_input_only_mode = enabled` in `fleet-1.conf`), allowing a phone or handheld device to function solely as a controller for the PC, without displaying any content or recieving any audio.
+- **Multi-Tasking**: Play a YouTube video, open the Spotify player, etc. on handheld/phone screen, while game plays on main screen. Useful for walkthrough videos, or anything else a secondary monitor could be useful for.
+- **Tip**: Asymmetrical Mode includes the **input-only mode** (`enable_input_only_mode = enabled` in `fleet-1.conf`), allowing a phone or handheld device to function solely as a controller for the PC, without displaying any content or recieving any audio. You could, in theory, use the client screen as the primary display, and use the PC monitor as an auxilary, reversing the roles.
 
 ### Mirror Mode
 
