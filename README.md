@@ -39,7 +39,6 @@ Follow these steps to install and set up PC-Link-U:
    - When the 7zip self-extractor (`apollofleet.exe`) opens, select the Documents folder (`%USERPROFILE%\Documents`) as the extraction destination.
 ![Step4-1](assets/step4-1.png "Step 4-1")
 ![Step4-2](assets/step4-2.png "Step 4-2")
-![Step4-3](assets/step4-3.png "Step 4-3")
 ![Step4-4](assets/step4-4.png "Step 4-4")
 5. **Complete Setup**:
    - Wait for the script to finish. It will generate configuration files (`settings.ini`, `fleet-1.conf`, `fleet-2.conf`, `fleet-3.conf`) in `%USERPROFILE%\Documents\ApolloFleet\config`.
