@@ -2,7 +2,7 @@
 
 ## About
 
-PC-Link-U is a self-hosted game streaming solution built on top of Apollo, designed to provide flexible streaming modes for various gaming scenarios. It automatically configures three instances, each tailored for a specific mode: **Asymmetrical**, **Solo**, and **Mirror**. These instances come with preconfigured settings to streamline setup and enhance the gaming experience.
+PC-Link-U is a self-hosted game streaming solution built on top of Apollo, designed to provide flexible streaming modes for various gaming scenarios. It is designed to be used with **ONE CLIENT AT A TIME.** It automatically configures three instances, each tailored for a specific mode: **Asymmetrical**, **Solo**, and **Mirror**. These instances come with preconfigured settings to streamline setup and enhance the gaming experience.
 
 **Key Features**:
 
