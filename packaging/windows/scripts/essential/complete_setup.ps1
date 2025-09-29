@@ -1,178 +1,188 @@
-# PowerShell script for PC-Link-U setup
+# complete_setup.ps1
+# This script sets up PC-Link-U by generating configuration files and installing ApolloFleet.
 
-   # Self-elevate if not running as administrator
-   if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-       Write-Host "Relaunching as administrator..."
-       Start-Process PowerShell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-       exit $LASTEXITCODE
-   }
+# Check if script is running as Administrator
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "This script requires administrative privileges. Please run as Administrator."
+    exit 1
+}
 
-   Write-Host "Running apollofleet.exe (7z self-extractor)..."
-   try {
-       $apolloFleetExe = Join-Path -Path $PSScriptRoot -ChildPath "..\..\extra\apollofleet.exe"
-       $apolloFleetLog = Join-Path -Path $env:TEMP -ChildPath "apollofleet.log"
-       $apolloFleetErrorLog = Join-Path -Path $env:TEMP -ChildPath "apollofleet_error.log"
-       $process = Start-Process -FilePath $apolloFleetExe -Wait -NoNewWindow -PassThru -RedirectStandardOutput $apolloFleetLog -RedirectStandardError $apolloFleetErrorLog
-       if ($process.ExitCode -eq 0) {
-           Write-Host "apollofleet.exe completed successfully."
-       } else {
-           Write-Host "Failed to run apollofleet.exe. Exit code: $($process.ExitCode)"
-           Write-Host "See $apolloFleetLog and $apolloFleetErrorLog for details."
-       }
-   }
-   catch {
-       Write-Host "Failed to run apollofleet.exe. Error: $_"
-       Write-Host "See $apolloFleetLog and $apolloFleetErrorLog for details."
-   }
+# Define paths
+$installDir = "C:\Program Files\PC-Link-U"
+$apolloFleetExe = Join-Path $installDir "apollofleet.exe"
+$docsDir = Join-Path $env:USERPROFILE "Documents"
+$apolloFleetDir = Join-Path $docsDir "ApolloFleet"
+$configDir = Join-Path $apolloFleetDir "config"
+$logFile = Join-Path $env:TEMP "generate_config_files.log"
+$errorLogFile = Join-Path $env:TEMP "generate_config_files_error.log"
 
-   Write-Host "Generating configuration files..."
-   try {
-       $apolloDir = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\ApolloFleet"
-       $configDir = Join-Path -Path $apolloDir -ChildPath "config"
-       $configLog = Join-Path -Path $env:TEMP -ChildPath "generate_config_files.log"
-       $configErrorLog = Join-Path -Path $env:TEMP -ChildPath "generate_config_files_error.log"
+# Function to log messages
+function Write-Log {
+    param($Message)
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    "$timestamp - $Message" | Out-File -FilePath $logFile -Append
+}
 
-       # Create directories
-       if (-not (Test-Path $apolloDir)) { New-Item -Path $apolloDir -ItemType Directory -Force | Out-Null }
-       if (-not (Test-Path $configDir)) { New-Item -Path $configDir -ItemType Directory -Force | Out-Null }
+# Function to log errors
+function Write-ErrorLog {
+    param($Message)
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    "$timestamp - ERROR: $Message" | Out-File -FilePath $errorLogFile -Append
+    Write-Host "ERROR: $Message"
+}
 
-       # Write settings.ini
-       Write-Host "Writing settings.ini..."
-       $settingsContent = @"
-[Manager]
-AutoStart=1
-SyncVolume=1
-RemoveDisconnected=1
-DarkTheme=1
-ShowErrors=1
-[Window]
-restorePosition=1
-[Paths]
-Apollo=C:\Program Files\PC-Link-U
-Config=$($env:USERPROFILE)\Documents\ApolloFleet\config
-ADB=$($env:USERPROFILE)\Documents\ApolloFleet\bin\platform-tools
-[Android]
-ReverseTethering=0
-MicDeviceID=Unset
-CamDeviceID=Unset
-MicEnable=0
-CamEnable=0
-[Instance1]
-Name=Asymmetrical Mode
-Port=11000
-Enabled=1
-AudioDevice=Unset
-HeadlessModeSet=enabled
-[Instance2]
-Name=Mirror Mode
-Port=12000
-Enabled=1
-AudioDevice=Unset
-HeadlessModeSet=disabled
-[Instance3]
-Name=Solo Mode
-Port=13000
-Enabled=1
-AudioDevice=Unset
-HeadlessModeSet=enabled
+# Create log files if they don't exist
+if (-not (Test-Path $logFile)) { New-Item -Path $logFile -ItemType File -Force | Out-Null }
+if (-not (Test-Path $errorLogFile)) { New-Item -Path $errorLogFile -ItemType File -Force | Out-Null }
+
+Write-Log "Starting PC-Link-U setup process..."
+
+# Verify apollofleet.exe exists
+if (-not (Test-Path $apolloFleetExe)) {
+    Write-ErrorLog "apollofleet.exe not found at $apolloFleetExe"
+    exit 1
+}
+
+# Run apollofleet.exe silently to extract to Documents\ApolloFleet
+try {
+    Write-Log "Running apollofleet.exe silently to extract to $apolloFleetDir"
+    Start-Process -FilePath $apolloFleetExe -ArgumentList "-o`"$docsDir`" -y" -Wait
+    Write-Log "apollofleet.exe extracted successfully to $apolloFleetDir"
+} catch {
+    Write-ErrorLog "Failed to extract apollofleet.exe: $_"
+    exit 1
+}
+
+# Create ApolloFleet config directory
+if (-not (Test-Path $configDir)) {
+    try {
+        New-Item -Path $configDir -ItemType Directory -Force | Out-Null
+        Write-Log "Created ApolloFleet config directory: $configDir"
+    } catch {
+        Write-ErrorLog "Failed to create config directory: $_"
+        exit 1
+    }
+}
+
+# Check for existing apps.json from Apollo or Sunshine
+$apolloConfigDir = "C:\Program Files\Apollo\config"
+$sunshineConfigDir = "C:\Program Files\Sunshine\config"
+$appsJson = $null
+
+if (Test-Path (Join-Path $apolloConfigDir "apps.json")) {
+    $appsJson = Join-Path $apolloConfigDir "apps.json"
+    Write-Log "Found apps.json in Apollo config: $appsJson"
+} elseif (Test-Path (Join-Path $sunshineConfigDir "apps.json")) {
+    $appsJson = Join-Path $sunshineConfigDir "apps.json"
+    Write-Log "Found apps.json in Sunshine config: $appsJson"
+} else {
+    Write-Log "No apps.json found in Apollo or Sunshine config directories."
+}
+
+# Copy and rename apps.json if found
+if ($appsJson) {
+    try {
+        Copy-Item -Path $appsJson -Destination (Join-Path $configDir "apps-1.json") -Force
+        Copy-Item -Path $appsJson -Destination (Join-Path $configDir "apps-2.json") -Force
+        Copy-Item -Path $appsJson -Destination (Join-Path $configDir "apps-3.json") -Force
+        Write-Log "Created apps-1.json, apps-2.json, and apps-3.json in $configDir"
+    } catch {
+        Write-ErrorLog "Failed to copy apps.json files: $_"
+        exit 1
+    }
+}
+
+# Run Apollo or Sunshine uninstaller non-silently if present
+$apolloUninstaller = "C:\Program Files\Apollo\Uninstall.exe"
+$sunshineUninstaller = "C:\Program Files\Sunshine\Uninstall.exe"
+
+if (Test-Path $apolloUninstaller) {
+    try {
+        Write-Log "Running Apollo uninstaller: $apolloUninstaller"
+        Start-Process -FilePath $apolloUninstaller -Wait
+        Write-Log "Apollo uninstaller executed successfully."
+    } catch {
+        Write-ErrorLog "Failed to run Apollo uninstaller: $_"
+    }
+} elseif (Test-Path $sunshineUninstaller) {
+    try {
+        Write-Log "Running Sunshine uninstaller: $sunshineUninstaller"
+        Start-Process -FilePath $sunshineUninstaller -Wait
+        Write-Log "Sunshine uninstaller executed successfully."
+    } catch {
+        Write-ErrorLog "Failed to run Sunshine uninstaller: $_"
+    }
+} else {
+    Write-Log "No Apollo or Sunshine uninstaller found."
+}
+
+# Generate configuration files
+try {
+    Write-Log "Generating configuration files in $configDir"
+    
+    # settings.ini
+    $settingsIni = @"
+[General]
+instances=3
+default_instance=1
 "@
-       $settingsContent | Out-File -FilePath (Join-Path -Path $apolloDir -ChildPath "settings.ini") -Encoding ASCII -ErrorAction Stop
-       Add-Content -Path $configLog -Value "settings.ini created successfully." -ErrorAction Stop
+    $settingsIniPath = Join-Path $configDir "settings.ini"
+    Set-Content -Path $settingsIniPath -Value $settingsIni -Force
+    Write-Log "Created $settingsIniPath"
 
-       # Write fleet-1.conf
-       Write-Host "Writing fleet-1.conf..."
-       $fleet1Content = @"
-credentials_file = $($env:USERPROFILE)\Documents\ApolloFleet\config\state-1.json
-dd_configuration_option = ensure_active
-double_refreshrate = enabled
-enable_input_only_mode = enabled
-file_apps = $($env:USERPROFILE)\Documents\ApolloFleet\config\apps-1.json
-file_state = $($env:USERPROFILE)\Documents\ApolloFleet\config\state-1.json
-keep_sink_default = disabled
-log_path = $($env:USERPROFILE)\Documents\ApolloFleet\config\fleet-1.log
-port = 11000
-sunshine_name = Asymetrical Mode
+    # fleet-1.conf (Asymmetrical Mode)
+    $fleet1Conf = @"
+[general]
+name=Asymmetrical Mode
+port=47990
+enable_input_only_mode=enabled
 "@
-       $fleet1Content | Out-File -FilePath (Join-Path -Path $configDir -ChildPath "fleet-1.conf") -Encoding ASCII -ErrorAction Stop
-       Add-Content -Path $configLog -Value "fleet-1.conf created successfully." -ErrorAction Stop
+    $fleet1ConfPath = Join-Path $configDir "fleet-1.conf"
+    Set-Content -Path $fleet1ConfPath -Value $fleet1Conf -Force
+    Write-Log "Created $fleet1ConfPath"
 
-       # Write fleet-2.conf
-       Write-Host "Writing fleet-2.conf..."
-       $fleet2Content = @"
-credentials_file = $($env:USERPROFILE)\Documents\ApolloFleet\config\state-2.json
-double_refreshrate = enabled
-file_apps = $($env:USERPROFILE)\Documents\ApolloFleet\config\apps-2.json
-file_state = $($env:USERPROFILE)\Documents\ApolloFleet\config\state-2.json
-keep_sink_default = disabled
-log_path = $($env:USERPROFILE)\Documents\ApolloFleet\config\fleet-2.log
-output_name = {30fd6e56-3a14-5539-9f24-61c606529fcb}
-port = 12000
-sunshine_name = Mirror Mode
+    # fleet-2.conf (Mirror Mode)
+    $fleet2Conf = @"
+[general]
+name=Mirror Mode
+port=47991
+mirror_mode=enabled
 "@
-       $fleet2Content | Out-File -FilePath (Join-Path -Path $configDir -ChildPath "fleet-2.conf") -Encoding ASCII -ErrorAction Stop
-       Add-Content -Path $configLog -Value "fleet-2.conf created successfully." -ErrorAction Stop
+    $fleet2ConfPath = Join-Path $configDir "fleet-2.conf"
+    Set-Content -Path $fleet2ConfPath -Value $fleet2Conf -Force
+    Write-Log "Created $fleet2ConfPath"
 
-       # Write fleet-3.conf
-       Write-Host "Writing fleet-3.conf..."
-       $fleet3Content = @"
-credentials_file = $($env:USERPROFILE)\Documents\ApolloFleet\config\state-3.json
-dd_configuration_option = ensure_only_display
-double_refreshrate = enabled
-file_apps = $($env:USERPROFILE)\Documents\ApolloFleet\config\apps-3.json
-file_state = $($env:USERPROFILE)\Documents\ApolloFleet\config\state-3.json
-headless_mode = enabled
-keep_sink_default = disabled
-log_path = $($env:USERPROFILE)\Documents\ApolloFleet\config\fleet-3.log
-port = 13000
-sunshine_name = Solo Mode
+    # fleet-3.conf (Solo Mode)
+    $fleet3Conf = @"
+[general]
+name=Solo Mode
+port=47992
+solo_mode=enabled
 "@
-       $fleet3Content | Out-File -FilePath (Join-Path -Path $configDir -ChildPath "fleet-3.conf") -Encoding ASCII -ErrorAction Stop
-       Add-Content -Path $configLog -Value "fleet-3.conf created successfully." -ErrorAction Stop
+    $fleet3ConfPath = Join-Path $configDir "fleet-3.conf"
+    Set-Content -Path $fleet3ConfPath -Value $fleet3Conf -Force
+    Write-Log "Created $fleet3ConfPath"
+} catch {
+    Write-ErrorLog "Failed to generate configuration files: $_"
+    exit 1
+}
 
-       Write-Host "Configuration files generated successfully in $apolloDir and $configDir"
-   }
-   catch {
-       Write-Host "Failed to generate configuration files. Error: $_"
-       Write-Host "See $configLog and $configErrorLog for details."
-       Add-Content -Path $configErrorLog -Value "Error: $_" -ErrorAction SilentlyContinue
-   }
+# Launch ApolloFleet
+$apolloFleetExeFinal = Join-Path $apolloFleetDir "ApolloFleet.exe"
+if (Test-Path $apolloFleetExeFinal) {
+    try {
+        Write-Log "Launching ApolloFleet: $apolloFleetExeFinal"
+        Start-Process -FilePath $apolloFleetExeFinal
+        Write-Log "ApolloFleet launched successfully."
+    } catch {
+        Write-ErrorLog "Failed to launch ApolloFleet: $_"
+        exit 1
+    }
+} else {
+    Write-ErrorLog "ApolloFleet.exe not found at $apolloFleetExeFinal"
+    exit 1
+}
 
-   Write-Host "Running ApolloFleet.exe from Documents..."
-   $apolloFleetExePath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\ApolloFleet\ApolloFleet.exe"
-   $apolloFleetExeLog = Join-Path -Path $env:TEMP -ChildPath "apollofleet_exe.log"
-   $apolloFleetExeErrorLog = Join-Path -Path $env:TEMP -ChildPath "apollofleet_exe_error.log"
-   if (Test-Path $apolloFleetExePath) {
-       try {
-           Start-Process -FilePath $apolloFleetExePath -NoNewWindow -RedirectStandardOutput $apolloFleetExeLog -RedirectStandardError $apolloFleetExeErrorLog
-           Write-Host "ApolloFleet.exe launched successfully."
-       }
-       catch {
-           Write-Host "Failed to launch ApolloFleet.exe. Error: $_"
-           Write-Host "See $apolloFleetExeLog and $apolloFleetExeErrorLog for details."
-       }
-       Write-Host "Press any key to continue or wait 10 seconds to exit..."
-       $timeout = 10
-       $startTime = Get-Date
-       while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
-           if ([Console]::KeyAvailable) {
-               $null = [Console]::ReadKey($true)
-               break
-           }
-           Start-Sleep -Milliseconds 100
-       }
-   }
-   else {
-       Write-Host "Error: ApolloFleet.exe not found at $apolloFleetExePath"
-       Write-Host "Press any key to continue or wait 10 seconds to exit..."
-       $timeout = 10
-       $startTime = Get-Date
-       while (((Get-Date) - $startTime).TotalSeconds -lt $timeout) {
-           if ([Console]::KeyAvailable) {
-               $null = [Console]::ReadKey($true)
-               break
-           }
-           Start-Sleep -Milliseconds 100
-       }
-   }
-
-   Write-Host "PC-Link-U setup complete!"
+Write-Log "PC-Link-U setup completed successfully."
+Write-Host "Setup completed. Check $logFile for details or $errorLogFile for errors."

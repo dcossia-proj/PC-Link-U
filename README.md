@@ -2,13 +2,13 @@
 
 ## About
 
-PC-Link-U is a self-hosted game streaming solution built on top of Apollo, designed to provide flexible streaming modes for various gaming scenarios. It is designed to be used with **ONE CLIENT AT A TIME.** It automatically configures three instances, each tailored for a specific mode: **Asymmetrical**, **Solo**, and **Mirror**. These instances come with preconfigured settings to streamline setup and enhance the gaming experience.
+PC-Link-U is a self-hosted game streaming solution built on top of Apollo, designed to provide flexible streaming modes for various gaming scenarios. It automatically configures three instances, each tailored for a specific mode: **Asymmetrical**, **Solo**, and **Mirror**. These instances come with preconfigured settings to streamline setup and enhance the gaming experience.
 
 **Key Features**:
 
 - **Three Preconfigured Instances**: Asymmetrical Mode, Solo Mode, and Mirror Mode, each optimized for different use cases.
 - **Seamless Integration**: Works with ApolloFleet to manage streaming instances efficiently.
-- **Tip**: Keep the ApolloFleet icon in the system tray and hide the three instances. Closing an instance while ApolloFleet is running will cause it to automatically reopen, causing a loop. You can easily manage all three instances from ApolloFleet anyways.
+- **Tip**: Keep the ApolloFleet icon in the system tray and hide the three instances. Closing an instance while ApolloFleet is running will cause it to automatically reopen, ensuring continuous operation.
 
 ## Prerequisites
 
@@ -33,57 +33,42 @@ Follow these steps to install and set up PC-Link-U:
      ```bash
      powershell -ExecutionPolicy Bypass -File "C:\Program Files\PC-Link-U\scripts\essential\complete_setup.ps1"
      ```
-![Step3](assets/step3.png "Step 3")
-
    - Accept the administrative privileges prompt when prompted.
 4. **Configure ApolloFleet**:
-   - When the 7zip self-extractor (`apollofleet.exe`) opens, select the Documents folder (`%USERPROFILE%\Documents`) as the extraction destination.
-![Step4-1](assets/step4-1.png "Step 4-1")
-![Step4-2](assets/step4-2.png "Step 4-2")
-![Step4-4](assets/step4-4.png "Step 4-4")
-
+   - The setup script automatically extracts ApolloFleet to `%USERPROFILE%\Documents\ApolloFleet` and generates configuration files. If you previously used Apollo or Sunshine, the script will automatically migrate your existing application configurations (`apps.json`) to the new setup.
 5. **Complete Setup**:
    - Wait for the script to finish. It will generate configuration files (`settings.ini`, `fleet-1.conf`, `fleet-2.conf`, `fleet-3.conf`) in `%USERPROFILE%\Documents\ApolloFleet\config`.
+   - If an Apollo or Sunshine installation is detected, the script will prompt to uninstall it.
    - Once the script completes, PC-Link-U is installed and ready to use.
-   - **Tip**: If changing from Apollo/Sunshine, and you want to keep any applications you have made previously, make 3 copies of the apps.json file in your Sunshine/Apollo config folder, close ApolloFleet AND all 3 instances of PC-Link-U, rename the 3 copies of apps.json to apps-1.json, apps-2.json, and apps-3.json, and move them into the %USERPROFILE%\\Documents\\ApolloFleet\\config folder (overwrite if necessary), and relaunch ApolloFleet from %USERPROFILE%\\Documents\\ApolloFleet. You can uninstall Apollo/Sunshine afterwards.
-     
+
 ## Modes
 
 PC-Link-U supports three distinct streaming modes, each tailored for specific gaming scenarios. Below are the details for each mode.
 
 ### Asymmetrical Mode
 
-Asymmetrical Mode adds the client device as a separate monitor while keeping the PC’s primary display intact. This mode is ideal for scenarios requiring dual-screen setups, such as Wii U or Nintendo DS/3DS emulation, where the PC screen displays the main game and the client device acts as a secondary screen (e.g., the Wii U GamePad or DS bottom screen). Also could be used just to make a client act as a dedicated monitor. Good example can be seen here: https://www.reddit.com/r/SteamDeck/comments/1kscuvz/my_steam_deck_can_now_be_used_as_basically_a/
-
-![AsymmetryDemo](assets/asymmetrical.png "Asymmetrical")
+Asymmetrical Mode adds the client device as a separate monitor while keeping the PC’s primary display intact. This mode is ideal for scenarios requiring dual-screen setups, such as Wii U or Nintendo DS/3DS emulation, where the PC screen displays the main game and the client device acts as a secondary screen (e.g., the Wii U GamePad or DS bottom screen). Also could be used just to make a client act as a dedicated monitor.
 
 #### OBS
 
 Using OBS Studio is key to maximizing Asymmetrical Mode’s potential. OBS allows you to create scenes by capturing various program windows, game elements, or other sources and projecting them in fullscreen to the client device. This creates a Wii U GamePad-like UI on the client, while the main game runs on the PC’s primary screen. For example:
 
 - Capture specific game UI elements (e.g., maps, menus) on the client screen.
-![OBS3](assets/obs3.png "OBS UI")
-- Combine multiple sources (windows, game captures) into a custom scene for a tailored experience per game, using different OBS scenes as different profiles. Adding obs64.exe to each application in PC Link U as a detached command with the launch parameter --scene "GAME" while also using stop process as an undo command, and setting OBS to remember projectors on startup will allow the specific game scene to appear on the client screen while the main game launches through PC Link U.
-  
-![OBS1](assets/obs.png "OBS Scenes")
-![OBS2](assets/obs2.png "OBS Projector")
+- Combine multiple sources (windows, game captures) into a custom scene for a tailored experience per game, using different OBS scenes as different profiles. Adding obs64.exe to each application in PC Link U as a detached command with the launch parameter --scene "GAME" while also using stop process as an undo command, and setting OBS to remember projectors on startup will allow the specific game scene to appear on the client screen while the main game launches. 
 
 #### Native
 
 Asymmetrical Mode also supports native applications that utilize secondary displays. Examples include:
 
-- **Microsoft Flight Simulator**: Drag a secondary window (e.g., cockpit instruments) to the client screen while the main game runs on the PC screen.
+- **Microsoft Flight Simulator**: Drag a secondary window (e.g., cockpit instruments) to the client screen while the main game runs on the PC.
 - **Wii U/3DS/DS Emulation**: Use the PC screen as the top screen and the client device as the bottom screen for touch or secondary display purposes.
-- **Multi-Tasking**: Play a YouTube video, open the Spotify player, etc. on handheld/phone screen, while game plays on main screen. Useful for walkthrough videos, or anything else a secondary monitor could be useful for.
-- **Tip**: Asymmetrical Mode includes the **input-only mode** (`enable_input_only_mode = enabled` in `fleet-1.conf`), allowing a phone or handheld device to function solely as a controller for the PC, without displaying any content or recieving any audio. You could, in theory, use the client screen as the primary display, and use the PC monitor as an auxilary, reversing the roles.
+- **Tip**: Asymmetrical Mode includes the **input-only mode** (`enable_input_only_mode = enabled` in `fleet-1.conf`), allowing a phone or handheld device to function solely as a controller for the PC, without displaying any content or receiving any audio.
 
 ### Mirror Mode
 
-Mirror Mode captures the PC’s primary display and streams it to the client device. This mode requires an initial display device ID entry in the **Audio/Video** section of the configuration tab in the web UI (`https://localhost:12001/config.html` by default for Mirror Mode). It’s ideal for couch party games where one player uses a handheld or phone to view the game, while others watch on a shared TV or monitor. Examples include:
+Mirror Mode captures the PC’s primary display and streams it to the client device. This mode requires an initial display device ID entry in the **Audio/Video** section of the configuration tab in the web UI (`https://localhost:47990/config.html`). It’s ideal for couch party games where one player uses a handheld or phone to view the game, while others watch on a shared TV or monitor. Examples include:
 
 - **Mario Party**, **Rounds**, **Gang Beasts**, **Stick Fight**: One player plays and sees the game via the client device, while the rest of the group views the game on the main display. This mode ensures a seamless, low-latency experience for local multiplayer gaming.
-  
-![MirrorDemo](assets/mirror.png "Mirror Mode")
 
 ### Solo Mode
 
@@ -91,20 +76,15 @@ Solo Mode disables all other displays and streams exclusively to the client devi
 
 - **Remote Play at Home**: Play games from a handheld or phone while away from the PC (e.g., in another room).
 - **Remote Play Away from Home**: Access your gaming PC from anywhere with an internet connection. Solo Mode ensures the client device is the sole display, optimizing performance for remote gaming scenarios.
-  
-![SoloDemo](assets/solo.jpg "Solo")
 
 ## Changing Settings
 
 All three instances of PC-Link-U (Asymmetrical, Solo, and Mirror) can be customized to suit user-specific requirements using the ApolloFleet Manager. After running the post-installation script (`complete_setup.ps1`), the ApolloFleet Manager opens automatically. To configure settings for each instance:
 
-1. Open the ApolloFleet Manager from the system tray
-2. In the ApolloFleet Manager interface, locate the Web UI link for each instance (Each can be found by clicking the specific instance in ApolloFleet).
+1. Open the ApolloFleet Manager from the system tray or by running `%USERPROFILE%\Documents\ApolloFleet\ApolloFleet.exe`.
+2. In the ApolloFleet Manager interface, locate the Web UI link for each instance (e.g., `https://localhost:47990/config.html` for the default instance, with different ports for each instance as specified in `fleet-1.conf`, `fleet-2.conf`, and `fleet-3.conf`).
 3. Click the Web UI link for the desired instance to access its configuration page in your web browser.
-   
-![Step5](assets/step5.png "Step 5")
-
-4. Adjust settings such as network settings, input permissions, or application configurations as needed. Refer to the **Apollo README** below for detailed configuration options. This process allows users to tailor each instance’s settings to their specific gaming needs, ensuring optimal performance and compatibility. Most settings are either preconfigured or client sided, but a few changes (like upnp, encoder settings, etc.) may be necessary. Remember that each instance has its own settings, so you may have to change certain settings in all of them to get desired results.
+4. Adjust settings such as network settings, input permissions, or application configurations as needed. Refer to the **Apollo README** below for detailed configuration options. Most settings are either preconfigured or client-sided, but a few changes (like upnp, encoder settings, etc.) may be necessary.
 
 ## Thanks
 
@@ -122,13 +102,9 @@ Apollo is a self-hosted desktop stream host for Artemis (Moonlight Noir). Offeri
 Major features:
 
 - [x] Built-in Virtual Display with HDR support that matches the resolution/framerate config of your client automatically
-
 - [x] Permission management for clients
-
 - [x] Clipboard sync
-
 - [x] Commands for client connection/disconnection (checkout Auto pause/resume games)
-
 - [x] Input only mode
 
 ### Usage
@@ -141,13 +117,13 @@ Currently Virtual Display support is Windows only, Linux support is planned and 
 
 Check out the Wiki
 
-> \[!NOTE\] The **FIRST** client paired with Apollo will be granted with FULL permissions, then other newly paired clients will only be granted with `View Streams` and `List Apps` permission. If you encounter `Permission Denied` error when trying to launch any app, go check the permission for that device and grant `Launch Apps` permission. The same applies to the situation when you find that you can't move mouse or type with keyboard on newly paired clients, grant the corresponding client `Mouse Input` and `Keyboard Input` permissions.
+> [!NOTE] The **FIRST** client paired with Apollo will be granted with FULL permissions, then other newly paired clients will only be granted with `View Streams` and `List Apps` permission. If you encounter `Permission Denied` error when trying to launch any app, go check the permission for that device and grant `Launch Apps` permission. The same applies to the situation when you find that you can't move mouse or type with keyboard on newly paired clients, grant the corresponding client `Mouse Input` and `Keyboard Input` permissions.
 
 ### About Virtual Display
 
-> \[!WARNING\] ***It is highly recommend to remove any other virtual display solutions from your system and Apollo/Sunshine config, to reduce confusions and compatibility issues.***
+> [!WARNING] ***It is highly recommend to remove any other virtual display solutions from your system and Apollo/Sunshine config, to reduce confusions and compatibility issues.***
 
-> \[!NOTE\] **TL;DR** Just treat your Artemis/Moonlight client like a dedicated PnP monitor with Apollo.
+> [!NOTE] **TL;DR** Just treat your Artemis/Moonlight client like a dedicated PnP monitor with Apollo.
 
 Apollo uses SudoVDA for virtual display. It features auto resolution and framerate matching for your Artemis/Moonlight clients. The virtual display is created upon the stream starts and removed once the app quits. **If you do not see a new virtual display added or removed when the stream starts or stops, there may be a driver misconfiguration, or another persistent virtual display might still be active.**
 
@@ -257,11 +233,15 @@ This is the same concept of my old Multi-streaming-setup scripts, with ease of G
 
 ### Preview
 
-![image](https://github.com/user-attachments/assets/2bfe3efe-21ab-494b-a790-5a0133e1b18d)### How to Use
+![image](https://github.com/user-attachments/assets/2bfe3efe-21ab-494b-a790-5a0133e1b18d)
 
-![usage](https://github.com/user-attachments/assets/72a3909f-b1c7-4aa2-bd78-3a70d3acbc61)### Current Status
+### How to Use
 
-> \[!Note\] Please bear in mind I'm not a professional programmer, this tool could have many issues or some unimplemented features yet, but this is an an essential tool for me I use everyday so expect I keep working on delivering fixes and features for it.
+![usage](https://github.com/user-attachments/assets/72a3909f-b1c7-4aa2-bd78-3a70d3acbc61)
+
+### Current Status
+
+> [!Note] Please bear in mind I'm not a professional programmer, this tool could have many issues or some unimplemented features yet, but this is an an essential tool for me I use everyday so expect I keep working on delivering fixes and features for it.
 >
 > If you find any issue please don't hesitate to open an issue in the repo, your feedback "and pull requests" are very welcomed.
 
@@ -325,33 +305,19 @@ This is the same concept of my old Multi-streaming-setup scripts, with ease of G
 ### Functionality
 
 - [x] Multi-instance: Add/remove Multiple instance configuration
-
 - [x] Multi-instance: Auto-startup on user logon
-
 - [x] Multi-instance: Configurable per-instance Audio Device
-
 - [x] Multi-instance: Sync device volume levels to all instances
-
 - [x] Multi-instance: Enable terminate-on-pause setting to Remove virtual display on client disconnect
-
 - [x] Multi-instance: Maintain Apollo instances "in case one exit/crash"
-
 - [x] Multi-instance: Fix volume level sync
-
 - [x] Android Clients: ADB Reverse tethering via Gnirehtet
-
 - [x] Android Clients: Maintain client Mic to PC using scrcpy
-
 - [x] Android Clients: Maintain client Cam to PC using scrcpy
-
 - [ ] Android Clients: Automate virtual Cam (need suitable driver first)
-
 - [ ] Android Clients: Support Mic with other than scrcpy (like AndroidMic)
-
 - [ ] Android Clients: Automate virtual Cam (something like tiny obs client?)
-
 - [ ] Android Clients: Support Cam for Android version below 12 (like DroidCamX)
-
 - [ ] Android Clients: Possibly bind instance to a device, thus that as soon as it connects launch the client using adb shell?
 
 ### Many Thanks To:
